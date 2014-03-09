@@ -21,6 +21,7 @@
 		AB509D7118CBF65F00713EEF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AB509D6F18CBF65F00713EEF /* InfoPlist.strings */; };
 		AB509D7318CBF65F00713EEF /* XHScrollMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AB509D7218CBF65F00713EEF /* XHScrollMenuTests.m */; };
 		AB509D7F18CBF76300713EEF /* XHScrollMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = AB509D7E18CBF76300713EEF /* XHScrollMenu.m */; };
+		AB509D8218CBF7C200713EEF /* XHIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB509D8118CBF7C200713EEF /* XHIndicatorView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		AB509D7218CBF65F00713EEF /* XHScrollMenuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XHScrollMenuTests.m; sourceTree = "<group>"; };
 		AB509D7D18CBF76300713EEF /* XHScrollMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHScrollMenu.h; sourceTree = "<group>"; };
 		AB509D7E18CBF76300713EEF /* XHScrollMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XHScrollMenu.m; sourceTree = "<group>"; };
+		AB509D8018CBF7C200713EEF /* XHIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHIndicatorView.h; sourceTree = "<group>"; };
+		AB509D8118CBF7C200713EEF /* XHIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XHIndicatorView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +161,8 @@
 			children = (
 				AB509D7D18CBF76300713EEF /* XHScrollMenu.h */,
 				AB509D7E18CBF76300713EEF /* XHScrollMenu.m */,
+				AB509D8018CBF7C200713EEF /* XHIndicatorView.h */,
+				AB509D8118CBF7C200713EEF /* XHIndicatorView.m */,
 			);
 			name = Source;
 			path = ../Source;
@@ -259,6 +264,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB509D8218CBF7C200713EEF /* XHIndicatorView.m in Sources */,
 				AB509D5E18CBF65F00713EEF /* ViewController.m in Sources */,
 				AB509D7F18CBF76300713EEF /* XHScrollMenu.m in Sources */,
 				AB509D5518CBF65E00713EEF /* AppDelegate.m in Sources */,
