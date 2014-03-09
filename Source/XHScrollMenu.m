@@ -35,6 +35,14 @@
 
 - (void)menuButtonSelected:(UIButton *)sender {
     _currentSelectedIndex = sender.tag - kXHMenuButtonBaseTag;
+    [self.menuButtons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if (obj == sender) {
+            sender.selected = YES;
+        } else {
+            UIButton *menuButton = obj;
+            menuButton.selected = NO;
+        }
+    }];
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         [self.scrollView scrollRectToVisibleCenteredOn:sender.frame animated:NO];
     } completion:^(BOOL finished) {
@@ -125,9 +133,15 @@
     [button setTitle:menu.title forState:UIControlStateNormal];
     [button setTitle:menu.title forState:UIControlStateHighlighted];
     [button setTitle:menu.title forState:UIControlStateSelected];
-    [button setTitleColor:menu.titleColor forState:UIControlStateNormal];
-    [button setTitleColor:menu.titleColor forState:UIControlStateHighlighted];
-    [button setTitleColor:menu.titleColor forState:UIControlStateSelected];
+    [button setTitleColor:menu.titleNormalColor forState:UIControlStateNormal];
+    if (!menu.titleHighlightedColor) {
+        menu.titleHighlightedColor = menu.titleNormalColor;
+    }
+    [button setTitleColor:menu.titleHighlightedColor forState:UIControlStateHighlighted];
+    if (!menu.titleSelectedColor) {
+        menu.titleSelectedColor = menu.titleNormalColor;
+    }
+    [button setTitleColor:menu.titleSelectedColor forState:UIControlStateSelected];
     [button addTarget:self action:@selector(menuButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
@@ -157,8 +171,11 @@
             contentWidth += CGRectGetMaxX(menuButtonFrame);
         }
         
-        // indicator
+        
         if (self.defaultSelectIndex == index) {
+            menuButton.selected = YES;
+            
+            // indicator
             _indicatorView.alpha = 1.;
             [self setupIndicatorFrame:menuButtonFrame animated:NO];
         }

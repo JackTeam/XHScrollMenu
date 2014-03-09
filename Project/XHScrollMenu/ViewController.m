@@ -54,7 +54,7 @@
         }
         menu.title = title;
         
-        menu.titleColor = [UIColor colorWithWhite:0.141 alpha:1.000];
+        menu.titleNormalColor = [UIColor colorWithWhite:0.141 alpha:1.000];
         menu.titleFont = [UIFont boldSystemFontOfSize:16];
         [menus addObject:menu];
     }
