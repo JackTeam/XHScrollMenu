@@ -147,6 +147,14 @@
 }
 
 - (void)reloadData {
+    [self.scrollView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isKindOfClass:[UIButton class]]) {
+            [((UIButton *)obj) removeFromSuperview];
+        }
+    }];
+    if (self.menuButtons.count)
+        [self.menuButtons removeAllObjects];
+    
     // layout subViews
     CGFloat contentWidth = 10;
     for (XHMenu *menu in self.menus) {
