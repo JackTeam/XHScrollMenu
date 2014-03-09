@@ -20,6 +20,7 @@
 		AB509D6918CBF65F00713EEF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB509D4818CBF65E00713EEF /* UIKit.framework */; };
 		AB509D7118CBF65F00713EEF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AB509D6F18CBF65F00713EEF /* InfoPlist.strings */; };
 		AB509D7318CBF65F00713EEF /* XHScrollMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AB509D7218CBF65F00713EEF /* XHScrollMenuTests.m */; };
+		AB509D7F18CBF76300713EEF /* XHScrollMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = AB509D7E18CBF76300713EEF /* XHScrollMenu.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		AB509D6E18CBF65F00713EEF /* XHScrollMenuTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "XHScrollMenuTests-Info.plist"; sourceTree = "<group>"; };
 		AB509D7018CBF65F00713EEF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AB509D7218CBF65F00713EEF /* XHScrollMenuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XHScrollMenuTests.m; sourceTree = "<group>"; };
+		AB509D7D18CBF76300713EEF /* XHScrollMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHScrollMenu.h; sourceTree = "<group>"; };
+		AB509D7E18CBF76300713EEF /* XHScrollMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XHScrollMenu.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +83,7 @@
 		AB509D3818CBF65E00713EEF = {
 			isa = PBXGroup;
 			children = (
+				AB509D7C18CBF74E00713EEF /* Source */,
 				AB509D4A18CBF65E00713EEF /* XHScrollMenu */,
 				AB509D6C18CBF65F00713EEF /* XHScrollMenuTests */,
 				AB509D4318CBF65E00713EEF /* Frameworks */,
@@ -147,6 +151,16 @@
 				AB509D6F18CBF65F00713EEF /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		AB509D7C18CBF74E00713EEF /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				AB509D7D18CBF76300713EEF /* XHScrollMenu.h */,
+				AB509D7E18CBF76300713EEF /* XHScrollMenu.m */,
+			);
+			name = Source;
+			path = ../Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -246,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB509D5E18CBF65F00713EEF /* ViewController.m in Sources */,
+				AB509D7F18CBF76300713EEF /* XHScrollMenu.m in Sources */,
 				AB509D5518CBF65E00713EEF /* AppDelegate.m in Sources */,
 				AB509D5118CBF65E00713EEF /* main.m in Sources */,
 			);
@@ -450,6 +465,7 @@
 				AB509D7818CBF65F00713EEF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AB509D7918CBF65F00713EEF /* Build configuration list for PBXNativeTarget "XHScrollMenuTests" */ = {
 			isa = XCConfigurationList;
@@ -458,6 +474,7 @@
 				AB509D7B18CBF65F00713EEF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
