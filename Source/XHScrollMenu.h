@@ -37,6 +37,8 @@
 // select
 @property (nonatomic, assign) NSUInteger selectedIndex; // default is 0
 
+- (void)setSelectedIndex:(NSUInteger)selectedIndex animated:(BOOL)aniamted;
+
 - (CGPoint)centerForSelectedItemAtIndex:(NSUInteger)index;
 
 - (CGPoint)contentOffsetForSelectedItemAtIndex:(NSUInteger)index;

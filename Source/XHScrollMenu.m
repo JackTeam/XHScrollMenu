@@ -110,12 +110,14 @@
     [self addSubview:self.managerMenusButton];
 }
 
-- (void)setupIndicatorFrame:(CGRect)menuButtonFrame animated:(BOOL)animated {
+- (void)setupIndicatorFrame:(CGRect)menuButtonFrame animated:(BOOL)animated callDelegate:(BOOL)called {
     [UIView animateWithDuration:(animated ? 0.15 : 0) delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         _indicatorView.frame = CGRectMake(CGRectGetMinX(menuButtonFrame), CGRectGetHeight(self.bounds) - kXHIndicatorViewHeight, CGRectGetWidth(menuButtonFrame), kXHIndicatorViewHeight);
     } completion:^(BOOL finished) {
-        if ([self.delegate respondsToSelector:@selector(scrollMenuDidSelected:menuIndex:)]) {
-            [self.delegate scrollMenuDidSelected:self menuIndex:self.selectedIndex];
+        if (called) {
+            if ([self.delegate respondsToSelector:@selector(scrollMenuDidSelected:menuIndex:)]) {
+                [self.delegate scrollMenuDidSelected:self menuIndex:self.selectedIndex];
+            }
         }
     }];
 }
@@ -178,7 +180,7 @@
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         [self.scrollView scrollRectToVisibleCenteredOn:selectedMenuButton.frame animated:NO];
     } completion:^(BOOL finished) {
-        [self setupIndicatorFrame:selectedMenuButton.frame animated:YES];
+        [self setupIndicatorFrame:selectedMenuButton.frame animated:aniamted callDelegate:YES];
     }];
 }
 
@@ -219,7 +221,7 @@
             menuButton.selected = YES;
             // indicator
             _indicatorView.alpha = 1.;
-            [self setupIndicatorFrame:menuButtonFrame animated:NO];
+            [self setupIndicatorFrame:menuButtonFrame animated:NO callDelegate:NO];
         }
     }
     [self.scrollView setContentSize:CGSizeMake(contentWidth, CGRectGetHeight(self.scrollView.frame))];
