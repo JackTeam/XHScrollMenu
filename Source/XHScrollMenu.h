@@ -11,7 +11,7 @@
 #import "XHMenu.h"
 #import "XHMenuButton.h"
 
-#define kXHMenuButtonPaddingX 15
+#define kXHMenuButtonPaddingX 30
 #define kXHMenuButtonStarX 8
 
 @class XHScrollMenu;
@@ -39,9 +39,7 @@
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex animated:(BOOL)aniamted;
 
-- (CGPoint)centerForSelectedItemAtIndex:(NSUInteger)index;
-
-- (CGPoint)contentOffsetForSelectedItemAtIndex:(NSUInteger)index;
+- (CGPoint)originForSelectedItemAtIndex:(NSUInteger)index;
 
 - (XHMenuButton *)menuButtonAtIndex:(NSUInteger)index;
 

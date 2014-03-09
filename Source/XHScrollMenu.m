@@ -154,20 +154,9 @@
 
 #pragma mark - Public
 
-- (CGPoint)centerForSelectedItemAtIndex:(NSUInteger)index {
-    CGPoint center = ((UIView *)self.menuButtons[index]).center;
-    CGPoint offset = [self contentOffsetForSelectedItemAtIndex:index];
-    center.x -= offset.x - (CGRectGetMinX(self.scrollView.frame));
-    return center;
-}
-
-- (CGPoint)contentOffsetForSelectedItemAtIndex:(NSUInteger)index {
-    if (self.menuButtons.count < index || self.menuButtons.count == 1) {
-        return CGPointZero;
-    } else {
-        CGFloat totalOffset = self.scrollView.contentSize.width - CGRectGetWidth(self.scrollView.frame);
-        return CGPointMake(index * totalOffset / (self.menuButtons.count - 1), 0.);
-    }
+- (CGPoint)originForSelectedItemAtIndex:(NSUInteger)index {
+    CGPoint origin = ((UIView *)self.menuButtons[index]).frame.origin;
+    return origin;
 }
 
 - (XHMenuButton *)menuButtonAtIndex:(NSUInteger)index {

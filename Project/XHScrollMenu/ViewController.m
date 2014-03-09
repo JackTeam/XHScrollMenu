@@ -10,7 +10,8 @@
 #import "XHMenu.h"
 #import "XHScrollMenu.h"
 
-@interface ViewController () <XHScrollMenuDelegate>
+@interface ViewController () <XHScrollMenuDelegate, UIScrollViewDelegate>
+@property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) XHScrollMenu *scrollMenu;
 @property (nonatomic, strong) NSMutableArray *menus;
@@ -44,14 +45,27 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    
     _segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" - ", @" + ", nil]];
     _segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
     [_segmentedControl addTarget:self action:@selector(valueChange:) forControlEvents:UIControlEventValueChanged];
     CGRect segmentedControlFrame = _segmentedControl.frame;
-    segmentedControlFrame.origin = CGPointMake(CGRectGetWidth(self.view.bounds) - CGRectGetWidth(segmentedControlFrame), 100);
+    segmentedControlFrame.origin = CGPointMake(CGRectGetWidth(self.view.bounds) - CGRectGetWidth(segmentedControlFrame), 44);
     _segmentedControl.frame = segmentedControlFrame;
     [self.view addSubview:self.segmentedControl];
+    
+    _scrollMenu = [[XHScrollMenu alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_segmentedControl.frame), CGRectGetWidth(self.view.bounds), 36)];
+    _scrollMenu.backgroundColor = [UIColor colorWithWhite:0.902 alpha:1.000];
+    _scrollMenu.delegate = self;
+    //    _scrollMenu.selectedIndex = 3;
+    [self.view addSubview:self.scrollMenu];
+    
+    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_scrollMenu.frame), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - CGRectGetMaxY(_scrollMenu.frame))];
+    _scrollView.showsHorizontalScrollIndicator = NO;
+    _scrollView.showsVerticalScrollIndicator = NO;
+    _scrollView.delegate = self;
+    _scrollView.pagingEnabled = YES;
+    
+    [self.view addSubview:self.scrollView];
     
     for (int i = 0; i < 20; i ++) {
         XHMenu *menu = [[XHMenu alloc] init];
@@ -62,7 +76,7 @@
                 title = @"头条";
                 break;
             case 1:
-                title = @"娱乐";
+                title = @"热点新闻";
                 break;
             case 2:
                 title = @"原创";
@@ -71,7 +85,7 @@
                 title = @"汽车";
                 break;
             case 4:
-                title = @"互联网";
+                title = @"CBA";
                 break;
             case 5:
                 title = @"NBA";
@@ -88,17 +102,29 @@
         menu.titleNormalColor = [UIColor colorWithWhite:0.141 alpha:1.000];
         menu.titleFont = [UIFont boldSystemFontOfSize:16];
         [self.menus addObject:menu];
+        
+        UIImageView *logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
+        logoImageView.frame = CGRectMake(i * CGRectGetWidth(_scrollView.bounds), 0, CGRectGetWidth(_scrollView.bounds), CGRectGetHeight(_scrollView.bounds));
+        [_scrollView addSubview:logoImageView];
     }
-    
-    _scrollMenu = [[XHScrollMenu alloc] initWithFrame:CGRectMake(0, 44, CGRectGetWidth(self.view.bounds), 36)];
-    _scrollMenu.backgroundColor = [UIColor colorWithWhite:0.902 alpha:1.000];
-    _scrollMenu.delegate = self;
-    _scrollMenu.selectedIndex = 3;
-    [self.view addSubview:self.scrollMenu];
+    [_scrollView setContentSize:CGSizeMake(self.menus.count * CGRectGetWidth(_scrollView.bounds), CGRectGetHeight(_scrollView.bounds))];
+    [self startObservingContentOffsetForScrollView:_scrollView];
     
     _scrollMenu.menus = self.menus;
-    
-    [_scrollMenu performSelector:@selector(reloadData) withObject:nil afterDelay:1];
+    [_scrollMenu reloadData];
+}
+
+- (void)startObservingContentOffsetForScrollView:(UIScrollView *)scrollView
+{
+    [scrollView addObserver:self forKeyPath:@"contentOffset" options:0 context:nil];
+}
+
+- (void)stopObservingContentOffset
+{
+    if (self.scrollView) {
+        [self.scrollView removeObserver:self forKeyPath:@"contentOffset"];
+        self.scrollView = nil;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -107,12 +133,71 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc {
+    [self stopObservingContentOffset];
+}
+
 - (void)scrollMenuDidSelected:(XHScrollMenu *)scrollMenu menuIndex:(NSUInteger)selectIndex {
     NSLog(@"selectIndex : %d", selectIndex);
 }
 
 - (void)scrollMenuDidManagerSelected:(XHScrollMenu *)scrollMenu {
     NSLog(@"scrollMenuDidManagerSelected");
+}
+
+#pragma mark - ScrollView delegate
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    //每页宽度
+    CGFloat pageWidth = scrollView.frame.size.width;
+    //根据当前的坐标与页宽计算当前页码
+    int currentPage = floor((scrollView.contentOffset.x - pageWidth/2)/pageWidth)+1;
+    [self.scrollMenu setSelectedIndex:currentPage animated:YES];
+}
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+					  ofObject:(id)object
+						change:(NSDictionary *)change
+                       context:(void *)context
+{
+    if ([keyPath isEqualToString:@"contentOffset"]) {
+        //每页宽度
+        CGFloat pageWidth = self.scrollView.frame.size.width;
+        //根据当前的坐标与页宽计算当前页码
+        int currentPage = floor((self.scrollView.contentOffset.x - pageWidth/2)/pageWidth)+1;
+        
+        CGFloat oldX = currentPage * CGRectGetWidth(self.scrollView.frame);
+        if (oldX != self.scrollView.contentOffset.x) {
+            BOOL scrollingTowards = (self.scrollView.contentOffset.x > oldX);
+            NSInteger targetIndex = (scrollingTowards) ? currentPage + 1 : currentPage - 1;
+            if (targetIndex >= 0 && targetIndex < self.menus.count) {
+                CGFloat ratio = (self.scrollView.contentOffset.x - oldX) / CGRectGetWidth(self.scrollView.frame);
+                CGFloat previousItemPageIndicatorX = [self.scrollMenu originForSelectedItemAtIndex:currentPage].x;
+                CGFloat nextItemPageIndicatorX = [self.scrollMenu originForSelectedItemAtIndex:targetIndex].x;
+                UIButton *previosSelectedItem = [self.scrollMenu menuButtonAtIndex:currentPage];
+                UIButton *nextSelectedItem = [self.scrollMenu menuButtonAtIndex:targetIndex];
+                /* this bug for Memory
+                [previosSelectedItem setTitleColor:[UIColor colorWithWhite:0.6 + 0.4 * (1 - fabsf(ratio))
+                                                                     alpha:1.] forState:UIControlStateNormal];
+                [nextSelectedItem setTitleColor:[UIColor colorWithWhite:0.6 + 0.4 * fabsf(ratio)
+                                                                  alpha:1.] forState:UIControlStateNormal];
+                 */
+                CGRect indicatorViewFrame = self.scrollMenu.indicatorView.frame;
+                
+                if (scrollingTowards) {
+                    indicatorViewFrame.size.width = CGRectGetWidth(previosSelectedItem.frame) + (CGRectGetWidth(nextSelectedItem.frame) - CGRectGetWidth(previosSelectedItem.frame)) * ratio;
+                    indicatorViewFrame.origin.x = previousItemPageIndicatorX + (nextItemPageIndicatorX - previousItemPageIndicatorX) * ratio;
+                } else {
+                    indicatorViewFrame.size.width = CGRectGetWidth(previosSelectedItem.frame) - (CGRectGetWidth(nextSelectedItem.frame) - CGRectGetWidth(previosSelectedItem.frame)) * ratio;
+                    indicatorViewFrame.origin.x = previousItemPageIndicatorX - (nextItemPageIndicatorX - previousItemPageIndicatorX) * ratio;
+                }
+                
+                self.scrollMenu.indicatorView.frame = indicatorViewFrame;
+            }
+        }
+    }
 }
 
 @end
