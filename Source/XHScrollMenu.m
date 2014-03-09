@@ -13,7 +13,7 @@
 #define kXHMenuButtonBaseTag 100
 
 @interface XHScrollMenu () <UIScrollViewDelegate> {
-    NSUInteger _currentSelectedIndex;
+    
 }
 
 @property (nonatomic, strong) UIImageView *leftShadowView;
@@ -27,6 +27,17 @@
 
 @implementation XHScrollMenu
 
+#pragma mark - Propertys
+
+- (NSMutableArray *)menuButtons {
+    if (!_menuButtons) {
+        _menuButtons = [[NSMutableArray alloc] initWithCapacity:self.menus.count];
+    }
+    return _menuButtons;
+}
+
+#pragma mark - Action
+
 - (void)managerMenusButtonClicked:(UIButton *)sender {
     if ([self.delegate respondsToSelector:@selector(scrollMenuDidManagerSelected:)]) {
         [self.delegate scrollMenuDidManagerSelected:self];
@@ -34,7 +45,6 @@
 }
 
 - (void)menuButtonSelected:(UIButton *)sender {
-    _currentSelectedIndex = sender.tag - kXHMenuButtonBaseTag;
     [self.menuButtons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if (obj == sender) {
             sender.selected = YES;
@@ -43,19 +53,10 @@
             menuButton.selected = NO;
         }
     }];
-    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-        [self.scrollView scrollRectToVisibleCenteredOn:sender.frame animated:NO];
-    } completion:^(BOOL finished) {
-        [self setupIndicatorFrame:sender.frame animated:YES];
-    }];
+    [self setSelectedIndex:sender.tag - kXHMenuButtonBaseTag animated:YES];
 }
 
-- (NSMutableArray *)menuButtons {
-    if (!_menuButtons) {
-        _menuButtons = [[NSMutableArray alloc] initWithCapacity:self.menus.count];
-    }
-    return _menuButtons;
-}
+#pragma mark - Life cycle
 
 - (UIImageView *)getShadowView:(BOOL)isLeft {
     UIImageView *shadowImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 7, CGRectGetHeight(self.bounds))];
@@ -74,7 +75,7 @@
 
 - (void)setup {
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.defaultSelectIndex = 0;
+    _selectedIndex = 0;
     
     _leftShadowView = [self getShadowView:YES];
     _leftShadowView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
@@ -114,19 +115,9 @@
         _indicatorView.frame = CGRectMake(CGRectGetMinX(menuButtonFrame), CGRectGetHeight(self.bounds) - kXHIndicatorViewHeight, CGRectGetWidth(menuButtonFrame), kXHIndicatorViewHeight);
     } completion:^(BOOL finished) {
         if ([self.delegate respondsToSelector:@selector(scrollMenuDidSelected:menuIndex:)]) {
-            [self.delegate scrollMenuDidSelected:self menuIndex:_currentSelectedIndex];
+            [self.delegate scrollMenuDidSelected:self menuIndex:self.selectedIndex];
         }
     }];
-}
-
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-        [self setup];
-    }
-    return self;
 }
 
 - (UIButton *)getButtonWithMenu:(XHMenu *)menu {
@@ -148,6 +139,47 @@
     [button setTitleColor:menu.titleSelectedColor forState:UIControlStateSelected];
     [button addTarget:self action:@selector(menuButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
     return button;
+}
+
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+        [self setup];
+    }
+    return self;
+}
+
+#pragma mark - Public
+
+- (CGPoint)centerForSelectedItemAtIndex:(NSUInteger)index {
+    CGPoint center = ((UIView *)self.menuButtons[index]).center;
+    CGPoint offset = [self contentOffsetForSelectedItemAtIndex:index];
+    center.x -= offset.x - (CGRectGetMinX(self.scrollView.frame));
+    return center;
+}
+
+- (CGPoint)contentOffsetForSelectedItemAtIndex:(NSUInteger)index {
+    if (self.menuButtons.count < index || self.menuButtons.count == 1) {
+        return CGPointZero;
+    } else {
+        CGFloat totalOffset = self.scrollView.contentSize.width - CGRectGetWidth(self.scrollView.frame);
+        return CGPointMake(index * totalOffset / (self.menuButtons.count - 1), 0.);
+    }
+}
+
+- (XHMenuButton *)menuButtonAtIndex:(NSUInteger)index {
+    return self.menuButtons[index];
+}
+
+- (void)setSelectedIndex:(NSUInteger)selectedIndex animated:(BOOL)aniamted {
+    _selectedIndex = selectedIndex;
+    UIButton *selectedMenuButton = [self menuButtonAtIndex:_selectedIndex];
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        [self.scrollView scrollRectToVisibleCenteredOn:selectedMenuButton.frame animated:NO];
+    } completion:^(BOOL finished) {
+        [self setupIndicatorFrame:selectedMenuButton.frame animated:YES];
+    }];
 }
 
 - (void)reloadData {
@@ -183,16 +215,15 @@
             contentWidth += CGRectGetMaxX(menuButtonFrame);
         }
         
-        
-        if (self.defaultSelectIndex == index) {
+        if (self.selectedIndex == index) {
             menuButton.selected = YES;
-            
             // indicator
             _indicatorView.alpha = 1.;
             [self setupIndicatorFrame:menuButtonFrame animated:NO];
         }
     }
     [self.scrollView setContentSize:CGSizeMake(contentWidth, CGRectGetHeight(self.scrollView.frame))];
+    [self setSelectedIndex:self.selectedIndex animated:NO];
 }
 
 #pragma mark - UIScrollView delegate

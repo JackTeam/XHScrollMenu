@@ -93,13 +93,12 @@
     _scrollMenu = [[XHScrollMenu alloc] initWithFrame:CGRectMake(0, 44, CGRectGetWidth(self.view.bounds), 36)];
     _scrollMenu.backgroundColor = [UIColor colorWithWhite:0.902 alpha:1.000];
     _scrollMenu.delegate = self;
-//    scrollMenu.defaultSelectIndex = 2;
+    _scrollMenu.selectedIndex = 3;
     [self.view addSubview:self.scrollMenu];
     
     _scrollMenu.menus = self.menus;
     
-    [_scrollMenu reloadData];
-    
+    [_scrollMenu performSelector:@selector(reloadData) withObject:nil afterDelay:1];
 }
 
 - (void)didReceiveMemoryWarning

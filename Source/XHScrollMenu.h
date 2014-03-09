@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "XHIndicatorView.h"
 #import "XHMenu.h"
+#import "XHMenuButton.h"
 
 #define kXHMenuButtonPaddingX 15
 #define kXHMenuButtonStarX 8
@@ -34,7 +35,13 @@
 @property (nonatomic, strong) NSArray *menus;
 
 // select
-@property (nonatomic, assign) NSUInteger defaultSelectIndex; // default is 0
+@property (nonatomic, assign) NSUInteger selectedIndex; // default is 0
+
+- (CGPoint)centerForSelectedItemAtIndex:(NSUInteger)index;
+
+- (CGPoint)contentOffsetForSelectedItemAtIndex:(NSUInteger)index;
+
+- (XHMenuButton *)menuButtonAtIndex:(NSUInteger)index;
 
 // reload dataSource
 - (void)reloadData;

@@ -27,6 +27,7 @@
 		AB509D8D18CBFC3700713EEF /* leftShadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB509D8A18CBFC3700713EEF /* leftShadow@2x.png */; };
 		AB509D8E18CBFC3700713EEF /* managerMenuButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB509D8B18CBFC3700713EEF /* managerMenuButton@2x.png */; };
 		AB509D8F18CBFC3700713EEF /* rightShadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB509D8C18CBFC3700713EEF /* rightShadow@2x.png */; };
+		ABEB09A018CD149600254A71 /* XHMenuButton.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEB099F18CD149600254A71 /* XHMenuButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,8 @@
 		AB509D8A18CBFC3700713EEF /* leftShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "leftShadow@2x.png"; sourceTree = "<group>"; };
 		AB509D8B18CBFC3700713EEF /* managerMenuButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "managerMenuButton@2x.png"; sourceTree = "<group>"; };
 		AB509D8C18CBFC3700713EEF /* rightShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rightShadow@2x.png"; sourceTree = "<group>"; };
+		ABEB099E18CD149600254A71 /* XHMenuButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHMenuButton.h; sourceTree = "<group>"; };
+		ABEB099F18CD149600254A71 /* XHMenuButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XHMenuButton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +177,8 @@
 				AB509D8918CBFC3700713EEF /* Resources */,
 				AB509D7D18CBF76300713EEF /* XHScrollMenu.h */,
 				AB509D7E18CBF76300713EEF /* XHScrollMenu.m */,
+				ABEB099E18CD149600254A71 /* XHMenuButton.h */,
+				ABEB099F18CD149600254A71 /* XHMenuButton.m */,
 				AB509D8018CBF7C200713EEF /* XHIndicatorView.h */,
 				AB509D8118CBF7C200713EEF /* XHIndicatorView.m */,
 				AB509D8318CBF80000713EEF /* XHMenu.h */,
@@ -296,6 +301,7 @@
 			files = (
 				AB509D8218CBF7C200713EEF /* XHIndicatorView.m in Sources */,
 				AB509D5E18CBF65F00713EEF /* ViewController.m in Sources */,
+				ABEB09A018CD149600254A71 /* XHMenuButton.m in Sources */,
 				AB509D7F18CBF76300713EEF /* XHScrollMenu.m in Sources */,
 				AB509D5518CBF65E00713EEF /* AppDelegate.m in Sources */,
 				AB509D8518CBF80000713EEF /* XHMenu.m in Sources */,
