@@ -16,8 +16,8 @@
     NSUInteger _currentSelectedIndex;
 }
 
-@property (nonatomic, strong) UIView *leftShadowView;
-@property (nonatomic, strong) UIView *rightShadowView;
+@property (nonatomic, strong) UIImageView *leftShadowView;
+@property (nonatomic, strong) UIImageView *rightShadowView;
 
 @property (nonatomic, strong) UIButton *managerMenusButton;
 
@@ -49,16 +49,19 @@
     return _menuButtons;
 }
 
-- (UIView *)getShadowView:(BOOL)isLeft {
-    UIView *shadowView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8, CGRectGetHeight(self.bounds))];
-    shadowView.layer.shadowColor = [UIColor blackColor].CGColor;
-    shadowView.layer.shadowOffset = CGSizeMake((isLeft ? 2.5 : -1.5), 0);
-    shadowView.layer.shadowRadius = 3.2;
-    shadowView.layer.shadowOpacity = 0.5;
-    shadowView.layer.shadowPath = [UIBezierPath bezierPathWithRect:shadowView.bounds].CGPath;
-    shadowView.hidden = isLeft;
-    shadowView.backgroundColor = self.backgroundColor;
-    return shadowView;
+- (UIImageView *)getShadowView:(BOOL)isLeft {
+    UIImageView *shadowImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 7, CGRectGetHeight(self.bounds))];
+    shadowImageView.image = [UIImage imageNamed:(isLeft ? @"leftShadow" : @"rightShadow")];
+    /** keep this code due with layer shadow
+    shadowImageView.layer.shadowColor = [UIColor blackColor].CGColor;
+    shadowImageView.layer.shadowOffset = CGSizeMake((isLeft ? 2.5 : -1.5), 0);
+    shadowImageView.layer.shadowRadius = 3.2;
+    shadowImageView.layer.shadowOpacity = 0.5;
+    shadowImageView.layer.shadowPath = [UIBezierPath bezierPathWithRect:shadowImageView.bounds].CGPath;
+     */
+    
+    shadowImageView.hidden = isLeft;
+    return shadowImageView;
 }
 
 - (void)setup {
@@ -72,6 +75,7 @@
     CGFloat width = CGRectGetHeight(self.bounds);
     _managerMenusButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.bounds) - width, 0, width, width)];
     _managerMenusButton.backgroundColor = self.backgroundColor;
+    [_managerMenusButton setImage:[UIImage imageNamed:@"managerMenuButton"] forState:UIControlStateNormal];
     [_managerMenusButton addTarget:self action:@selector(managerMenusButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     CGRect rightShadowViewFrame = _rightShadowView.frame;

@@ -36,7 +36,7 @@
         [menus addObject:menu];
     }
     
-    XHScrollMenu *scrollMenu = [[XHScrollMenu alloc] initWithFrame:CGRectMake(0, 44, CGRectGetWidth(self.view.bounds), 35)];
+    XHScrollMenu *scrollMenu = [[XHScrollMenu alloc] initWithFrame:CGRectMake(0, 44, CGRectGetWidth(self.view.bounds), 36)];
     scrollMenu.backgroundColor = [UIColor colorWithWhite:0.902 alpha:1.000];
     scrollMenu.delegate = self;
     //    scrollMenu.defaultSelectIndex = 2;
