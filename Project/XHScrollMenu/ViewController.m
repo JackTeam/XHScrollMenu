@@ -25,21 +25,44 @@
     for (int i = 0; i < 20; i ++) {
         XHMenu *menu = [[XHMenu alloc] init];
         
-        if (i / 5) {
-            menu.title = [NSString stringWithFormat:@"长长标题"];
-        } else {
-            menu.title = [NSString stringWithFormat:@"标题"];
+        NSString *title = nil;
+        switch (i) {
+            case 0:
+                title = @"头条";
+                break;
+            case 1:
+                title = @"娱乐";
+                break;
+            case 2:
+                title = @"原创";
+                break;
+            case 3:
+                title = @"汽车";
+                break;
+            case 4:
+                title = @"互联网";
+                break;
+            case 5:
+                title = @"NBA";
+                break;
+            case 6:
+                title = @"时尚";
+                break;
+            default:
+                title = @"热点新闻";
+                break;
         }
+        menu.title = title;
         
-        menu.titleColor = [UIColor blackColor];
-        menu.titleFont = [UIFont systemFontOfSize:16];
+        menu.titleColor = [UIColor colorWithWhite:0.141 alpha:1.000];
+        menu.titleFont = [UIFont boldSystemFontOfSize:16];
         [menus addObject:menu];
     }
     
     XHScrollMenu *scrollMenu = [[XHScrollMenu alloc] initWithFrame:CGRectMake(0, 44, CGRectGetWidth(self.view.bounds), 36)];
     scrollMenu.backgroundColor = [UIColor colorWithWhite:0.902 alpha:1.000];
     scrollMenu.delegate = self;
-    //    scrollMenu.defaultSelectIndex = 2;
+//    scrollMenu.defaultSelectIndex = 2;
     [self.view addSubview:scrollMenu];
     
     scrollMenu.menus = menus;
