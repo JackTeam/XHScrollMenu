@@ -22,6 +22,7 @@
 		AB509D7318CBF65F00713EEF /* XHScrollMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AB509D7218CBF65F00713EEF /* XHScrollMenuTests.m */; };
 		AB509D7F18CBF76300713EEF /* XHScrollMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = AB509D7E18CBF76300713EEF /* XHScrollMenu.m */; };
 		AB509D8218CBF7C200713EEF /* XHIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB509D8118CBF7C200713EEF /* XHIndicatorView.m */; };
+		AB509D8518CBF80000713EEF /* XHMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = AB509D8418CBF80000713EEF /* XHMenu.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,8 @@
 		AB509D7E18CBF76300713EEF /* XHScrollMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XHScrollMenu.m; sourceTree = "<group>"; };
 		AB509D8018CBF7C200713EEF /* XHIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHIndicatorView.h; sourceTree = "<group>"; };
 		AB509D8118CBF7C200713EEF /* XHIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XHIndicatorView.m; sourceTree = "<group>"; };
+		AB509D8318CBF80000713EEF /* XHMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHMenu.h; sourceTree = "<group>"; };
+		AB509D8418CBF80000713EEF /* XHMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XHMenu.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +166,8 @@
 				AB509D7E18CBF76300713EEF /* XHScrollMenu.m */,
 				AB509D8018CBF7C200713EEF /* XHIndicatorView.h */,
 				AB509D8118CBF7C200713EEF /* XHIndicatorView.m */,
+				AB509D8318CBF80000713EEF /* XHMenu.h */,
+				AB509D8418CBF80000713EEF /* XHMenu.m */,
 			);
 			name = Source;
 			path = ../Source;
@@ -268,6 +273,7 @@
 				AB509D5E18CBF65F00713EEF /* ViewController.m in Sources */,
 				AB509D7F18CBF76300713EEF /* XHScrollMenu.m in Sources */,
 				AB509D5518CBF65E00713EEF /* AppDelegate.m in Sources */,
+				AB509D8518CBF80000713EEF /* XHMenu.m in Sources */,
 				AB509D5118CBF65E00713EEF /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
