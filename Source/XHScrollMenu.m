@@ -73,15 +73,18 @@
 }
 
 - (void)setup {
+    self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.defaultSelectIndex = 0;
     
     _leftShadowView = [self getShadowView:YES];
+    _leftShadowView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     
     _rightShadowView = [self getShadowView:NO];
-    
+    _rightShadowView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
     CGFloat width = CGRectGetHeight(self.bounds);
     _managerMenusButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.bounds) - width, 0, width, width)];
+    _managerMenusButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     _managerMenusButton.backgroundColor = self.backgroundColor;
     [_managerMenusButton setImage:[UIImage imageNamed:@"managerMenuButton"] forState:UIControlStateNormal];
     [_managerMenusButton addTarget:self action:@selector(managerMenusButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -91,6 +94,7 @@
     _rightShadowView.frame = rightShadowViewFrame;
     
     _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_leftShadowView.frame), 0, CGRectGetWidth(self.bounds) - CGRectGetWidth(rightShadowViewFrame) * 2 - CGRectGetWidth(_managerMenusButton.frame), CGRectGetHeight(self.bounds))];
+    _scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _scrollView.showsVerticalScrollIndicator = NO;
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.delegate = self;
@@ -195,10 +199,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat contentOffsetX = scrollView.contentOffset.x;
-    if (scrollView.contentSize.width == CGRectGetWidth(scrollView.frame)) {
+    CGFloat contentSizeWidth = (NSInteger)scrollView.contentSize.width;
+    CGFloat scrollViewWidth = CGRectGetWidth(scrollView.bounds);
+    if (contentSizeWidth == scrollViewWidth) {
         self.leftShadowView.hidden = YES;
         self.rightShadowView.hidden = YES;
-    } else if (scrollView.contentSize.width <= CGRectGetWidth(scrollView.frame)) {
+    } else if (contentSizeWidth <= scrollViewWidth) {
         self.leftShadowView.hidden = YES;
         self.rightShadowView.hidden = YES;
     } else {
@@ -208,7 +214,7 @@
             self.leftShadowView.hidden = YES;
         }
         
-        if ((contentOffsetX + CGRectGetWidth(scrollView.frame)) >= scrollView.contentSize.width) {
+        if ((contentOffsetX + scrollViewWidth) >= contentSizeWidth) {
             self.rightShadowView.hidden = YES;
         } else {
             self.rightShadowView.hidden = NO;
