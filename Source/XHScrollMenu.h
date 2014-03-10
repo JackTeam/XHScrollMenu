@@ -11,7 +11,7 @@
 #import "XHMenu.h"
 #import "XHMenuButton.h"
 
-#define kXHMenuButtonPaddingX 0
+#define kXHMenuButtonPaddingX 30
 #define kXHMenuButtonStarX 8
 
 @class XHScrollMenu;
