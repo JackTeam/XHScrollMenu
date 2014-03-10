@@ -53,7 +53,7 @@
             menuButton.selected = NO;
         }
     }];
-    [self setSelectedIndex:sender.tag - kXHMenuButtonBaseTag animated:YES];
+    [self setSelectedIndex:sender.tag - kXHMenuButtonBaseTag animated:YES calledDelegate:YES];
 }
 
 #pragma mark - Life cycle
@@ -154,22 +154,22 @@
 
 #pragma mark - Public
 
-- (CGPoint)originForSelectedItemAtIndex:(NSUInteger)index {
-    CGPoint origin = ((UIView *)self.menuButtons[index]).frame.origin;
-    return origin;
+- (CGRect)rectForSelectedItemAtIndex:(NSUInteger)index {
+    CGRect rect = ((UIView *)self.menuButtons[index]).frame;
+    return rect;
 }
 
 - (XHMenuButton *)menuButtonAtIndex:(NSUInteger)index {
     return self.menuButtons[index];
 }
 
-- (void)setSelectedIndex:(NSUInteger)selectedIndex animated:(BOOL)aniamted {
+- (void)setSelectedIndex:(NSUInteger)selectedIndex animated:(BOOL)aniamted calledDelegate:(BOOL)calledDelgate {
     _selectedIndex = selectedIndex;
     UIButton *selectedMenuButton = [self menuButtonAtIndex:_selectedIndex];
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         [self.scrollView scrollRectToVisibleCenteredOn:selectedMenuButton.frame animated:NO];
     } completion:^(BOOL finished) {
-        [self setupIndicatorFrame:selectedMenuButton.frame animated:aniamted callDelegate:YES];
+        [self setupIndicatorFrame:selectedMenuButton.frame animated:aniamted callDelegate:calledDelgate];
     }];
 }
 
@@ -214,7 +214,7 @@
         }
     }
     [self.scrollView setContentSize:CGSizeMake(contentWidth, CGRectGetHeight(self.scrollView.frame))];
-    [self setSelectedIndex:self.selectedIndex animated:NO];
+    [self setSelectedIndex:self.selectedIndex animated:NO calledDelegate:YES];
 }
 
 #pragma mark - UIScrollView delegate

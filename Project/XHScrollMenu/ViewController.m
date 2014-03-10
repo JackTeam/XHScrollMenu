@@ -15,6 +15,7 @@
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) XHScrollMenu *scrollMenu;
 @property (nonatomic, strong) NSMutableArray *menus;
+@property (nonatomic, assign) BOOL shouldObserving;
 @end
 
 @implementation ViewController
@@ -45,6 +46,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    self.shouldObserving = YES;
+    
     _segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" - ", @" + ", nil]];
     _segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
     [_segmentedControl addTarget:self action:@selector(valueChange:) forControlEvents:UIControlEventValueChanged];
@@ -67,7 +70,7 @@
     
     [self.view addSubview:self.scrollView];
     
-    for (int i = 0; i < 20; i ++) {
+    for (int i = 0; i < 10; i ++) {
         XHMenu *menu = [[XHMenu alloc] init];
         
         NSString *title = nil;
@@ -91,10 +94,16 @@
                 title = @"NBA";
                 break;
             case 6:
-                title = @"时尚";
+                title = @"热点新闻";
+                break;
+                case 8:
+                title = @"房产";
+                break;
+                case 9:
+                title = @"新闻热点";
                 break;
             default:
-                title = @"热点新闻";
+                title = @"热点";
                 break;
         }
         menu.title = title;
@@ -138,11 +147,23 @@
 }
 
 - (void)scrollMenuDidSelected:(XHScrollMenu *)scrollMenu menuIndex:(NSUInteger)selectIndex {
+    
     NSLog(@"selectIndex : %d", selectIndex);
+    self.shouldObserving = NO;
+    [self menuSelectedIndex:selectIndex];
 }
 
 - (void)scrollMenuDidManagerSelected:(XHScrollMenu *)scrollMenu {
     NSLog(@"scrollMenuDidManagerSelected");
+}
+
+- (void)menuSelectedIndex:(NSUInteger)index {
+    CGRect visibleRect = CGRectMake(index * CGRectGetWidth(self.scrollView.bounds), 0, CGRectGetWidth(self.scrollView.bounds), CGRectGetHeight(self.scrollView.bounds));
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        [self.scrollView scrollRectToVisible:visibleRect animated:NO];
+    } completion:^(BOOL finished) {
+        self.shouldObserving = YES;
+    }];
 }
 
 #pragma mark - ScrollView delegate
@@ -152,7 +173,7 @@
     CGFloat pageWidth = scrollView.frame.size.width;
     //根据当前的坐标与页宽计算当前页码
     int currentPage = floor((scrollView.contentOffset.x - pageWidth/2)/pageWidth)+1;
-    [self.scrollMenu setSelectedIndex:currentPage animated:YES];
+    [self.scrollMenu setSelectedIndex:currentPage animated:YES calledDelegate:NO];
 }
 
 #pragma mark - KVO
@@ -162,11 +183,13 @@
 						change:(NSDictionary *)change
                        context:(void *)context
 {
-    if ([keyPath isEqualToString:@"contentOffset"]) {
+    if ([keyPath isEqualToString:@"contentOffset"] && self.shouldObserving) {
         //每页宽度
         CGFloat pageWidth = self.scrollView.frame.size.width;
         //根据当前的坐标与页宽计算当前页码
-        int currentPage = floor((self.scrollView.contentOffset.x - pageWidth/2)/pageWidth)+1;
+        NSUInteger currentPage = floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+        if (currentPage > self.menus.count - 1)
+            currentPage = self.menus.count - 1;
         
         CGFloat oldX = currentPage * CGRectGetWidth(self.scrollView.frame);
         if (oldX != self.scrollView.contentOffset.x) {
@@ -174,11 +197,14 @@
             NSInteger targetIndex = (scrollingTowards) ? currentPage + 1 : currentPage - 1;
             if (targetIndex >= 0 && targetIndex < self.menus.count) {
                 CGFloat ratio = (self.scrollView.contentOffset.x - oldX) / CGRectGetWidth(self.scrollView.frame);
-                CGFloat previousItemPageIndicatorX = [self.scrollMenu originForSelectedItemAtIndex:currentPage].x;
-                CGFloat nextItemPageIndicatorX = [self.scrollMenu originForSelectedItemAtIndex:targetIndex].x;
+                CGRect previousMenuButtonRect = [self.scrollMenu rectForSelectedItemAtIndex:currentPage];
+                CGRect nextMenuButtonRect = [self.scrollMenu rectForSelectedItemAtIndex:targetIndex];
+                CGFloat previousItemPageIndicatorX = previousMenuButtonRect.origin.x;
+                CGFloat nextItemPageIndicatorX = nextMenuButtonRect.origin.x;
+                
+                /* this bug for Memory
                 UIButton *previosSelectedItem = [self.scrollMenu menuButtonAtIndex:currentPage];
                 UIButton *nextSelectedItem = [self.scrollMenu menuButtonAtIndex:targetIndex];
-                /* this bug for Memory
                 [previosSelectedItem setTitleColor:[UIColor colorWithWhite:0.6 + 0.4 * (1 - fabsf(ratio))
                                                                      alpha:1.] forState:UIControlStateNormal];
                 [nextSelectedItem setTitleColor:[UIColor colorWithWhite:0.6 + 0.4 * fabsf(ratio)
@@ -187,10 +213,10 @@
                 CGRect indicatorViewFrame = self.scrollMenu.indicatorView.frame;
                 
                 if (scrollingTowards) {
-                    indicatorViewFrame.size.width = CGRectGetWidth(previosSelectedItem.frame) + (CGRectGetWidth(nextSelectedItem.frame) - CGRectGetWidth(previosSelectedItem.frame)) * ratio;
+                    indicatorViewFrame.size.width = CGRectGetWidth(previousMenuButtonRect) + (CGRectGetWidth(nextMenuButtonRect) - CGRectGetWidth(previousMenuButtonRect)) * ratio;
                     indicatorViewFrame.origin.x = previousItemPageIndicatorX + (nextItemPageIndicatorX - previousItemPageIndicatorX) * ratio;
                 } else {
-                    indicatorViewFrame.size.width = CGRectGetWidth(previosSelectedItem.frame) - (CGRectGetWidth(nextSelectedItem.frame) - CGRectGetWidth(previosSelectedItem.frame)) * ratio;
+                    indicatorViewFrame.size.width = CGRectGetWidth(previousMenuButtonRect) - (CGRectGetWidth(nextMenuButtonRect) - CGRectGetWidth(previousMenuButtonRect)) * ratio;
                     indicatorViewFrame.origin.x = previousItemPageIndicatorX - (nextItemPageIndicatorX - previousItemPageIndicatorX) * ratio;
                 }
                 
