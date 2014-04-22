@@ -1,4 +1,4 @@
-![image](https://github.com/JackTeam/XHScrollMenu/raw/master/Screenshots/XHScrollMenu.gif)
+![image](https://github.com/JackTeam/XHScrollMenu/raw/master/Screenshots/XHScrollMenuContentView.gif)
 ============
 XHScrollMenu is a display column elements， base on NetEase News App.
 
