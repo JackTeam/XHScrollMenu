@@ -35,6 +35,8 @@
         menu.title = @"添加的";
         
         menu.titleNormalColor = [UIColor colorWithWhite:0.141 alpha:1.000];
+        menu.titleHighlightedColor = [UIColor blueColor];
+        menu.titleSelectedColor = [UIColor redColor];
         menu.titleFont = [UIFont boldSystemFontOfSize:16];
         [self.menus addObject:menu];
     }
@@ -109,6 +111,7 @@
         menu.title = title;
         
         menu.titleNormalColor = [UIColor colorWithWhite:0.141 alpha:1.000];
+        menu.titleSelectedColor = [UIColor redColor];
         menu.titleFont = [UIFont boldSystemFontOfSize:16];
         [self.menus addObject:menu];
         

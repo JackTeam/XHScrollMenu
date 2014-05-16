@@ -128,17 +128,12 @@
     button.titleLabel.textAlignment = UITextAlignmentCenter;
     button.titleLabel.font = menu.titleFont;
     [button setTitle:menu.title forState:UIControlStateNormal];
-    [button setTitle:menu.title forState:UIControlStateHighlighted];
-    [button setTitle:menu.title forState:UIControlStateSelected];
-    [button setTitleColor:menu.titleNormalColor forState:UIControlStateNormal];
-    if (!menu.titleHighlightedColor) {
-        menu.titleHighlightedColor = menu.titleNormalColor;
-    }
-    [button setTitleColor:menu.titleHighlightedColor forState:UIControlStateHighlighted];
-    if (!menu.titleSelectedColor) {
-        menu.titleSelectedColor = menu.titleNormalColor;
-    }
-    [button setTitleColor:menu.titleSelectedColor forState:UIControlStateSelected];
+    if (menu.titleNormalColor)
+        [button setTitleColor:menu.titleNormalColor forState:UIControlStateNormal];
+    if (menu.titleHighlightedColor)
+        [button setTitleColor:menu.titleHighlightedColor forState:UIControlStateHighlighted];
+    if (menu.titleSelectedColor)
+        [button setTitleColor:menu.titleSelectedColor forState:UIControlStateSelected];
     [button addTarget:self action:@selector(menuButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
@@ -164,6 +159,12 @@
 }
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex animated:(BOOL)aniamted calledDelegate:(BOOL)calledDelgate {
+    UIButton *towardsButton = [self.menuButtons objectAtIndex:selectedIndex];
+    towardsButton.selected = YES;
+    
+    UIButton *prousButton = [self.menuButtons objectAtIndex:_selectedIndex];
+    prousButton.selected = (_selectedIndex == selectedIndex && !selectedIndex);
+   
     _selectedIndex = selectedIndex;
     UIButton *selectedMenuButton = [self menuButtonAtIndex:_selectedIndex];
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
