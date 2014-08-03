@@ -72,7 +72,7 @@
     
     [self.view addSubview:self.scrollView];
     
-    for (int i = 0; i < 10; i ++) {
+    for (int i = 0; i < 3; i ++) {
         XHMenu *menu = [[XHMenu alloc] init];
         
         NSString *title = nil;

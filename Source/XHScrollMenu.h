@@ -31,6 +31,9 @@
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) XHIndicatorView *indicatorView;
 
+// Default is NO
+@property (nonatomic, assign) BOOL hasManagerButton;
+
 // DataSource
 @property (nonatomic, strong) NSArray *menus;
 

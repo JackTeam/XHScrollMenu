@@ -83,18 +83,21 @@
     _rightShadowView = [self getShadowView:NO];
     _rightShadowView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
-    CGFloat width = CGRectGetHeight(self.bounds);
-    _managerMenusButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.bounds) - width, 0, width, width)];
-    _managerMenusButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    _managerMenusButton.backgroundColor = self.backgroundColor;
-    [_managerMenusButton setImage:[UIImage imageNamed:@"managerMenuButton"] forState:UIControlStateNormal];
-    [_managerMenusButton addTarget:self action:@selector(managerMenusButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    CGFloat height = CGRectGetHeight(self.bounds);
+    if (self.hasManagerButton) {
+        _managerMenusButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.bounds) - height, 0, height, height)];
+        _managerMenusButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        _managerMenusButton.backgroundColor = self.backgroundColor;
+        [_managerMenusButton setImage:[UIImage imageNamed:@"managerMenuButton"] forState:UIControlStateNormal];
+        [_managerMenusButton addTarget:self action:@selector(managerMenusButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.managerMenusButton];
+    }
     
     CGRect rightShadowViewFrame = _rightShadowView.frame;
-    rightShadowViewFrame.origin = CGPointMake(CGRectGetMinX(_managerMenusButton.frame) - CGRectGetWidth(rightShadowViewFrame), 0);
+    rightShadowViewFrame.origin = CGPointMake((self.hasManagerButton ? CGRectGetMinX(_managerMenusButton.frame) : CGRectGetWidth(self.bounds)) - CGRectGetWidth(rightShadowViewFrame), 0);
     _rightShadowView.frame = rightShadowViewFrame;
     
-    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_leftShadowView.frame), 0, CGRectGetWidth(self.bounds) - CGRectGetWidth(rightShadowViewFrame) * 2 - CGRectGetWidth(_managerMenusButton.frame), CGRectGetHeight(self.bounds))];
+    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_leftShadowView.frame), 0, CGRectGetWidth(self.bounds) - CGRectGetWidth(rightShadowViewFrame) * 2 - (self.hasManagerButton ? CGRectGetWidth(_managerMenusButton.frame) : 0), CGRectGetHeight(self.bounds))];
     _scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _scrollView.showsVerticalScrollIndicator = NO;
     _scrollView.showsHorizontalScrollIndicator = NO;
@@ -107,7 +110,6 @@
     [self addSubview:self.scrollView];
     [self addSubview:self.leftShadowView];
     [self addSubview:self.rightShadowView];
-    [self addSubview:self.managerMenusButton];
 }
 
 - (void)setupIndicatorFrame:(CGRect)menuButtonFrame animated:(BOOL)animated callDelegate:(BOOL)called {
@@ -142,9 +144,14 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        [self setup];
     }
     return self;
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    if (newSuperview) {
+        [self setup];
+    }
 }
 
 #pragma mark - Public
