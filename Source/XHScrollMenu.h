@@ -34,6 +34,12 @@
 // Default is NO
 @property (nonatomic, assign) BOOL hasManagerButton;
 
+// Default is YES
+@property (nonatomic, assign) BOOL hasShadowForBoth;
+
+// XHIndicatorView Color
+@property (nonatomic, strong) UIColor *indicatorTintColor;
+
 // DataSource
 @property (nonatomic, strong) NSArray *menus;
 
