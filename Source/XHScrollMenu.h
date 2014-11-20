@@ -46,6 +46,10 @@
 // select
 @property (nonatomic, assign) NSUInteger selectedIndex; // default is 0
 
+// 当menu数较少时，是否均匀摆放button使之占满整个宽度。默认是no;
+@property (nonatomic, assign) BOOL shouldUniformizeMenus;
+
+
 - (void)setSelectedIndex:(NSUInteger)selectedIndex animated:(BOOL)aniamted calledDelegate:(BOOL)calledDelgate;
 
 - (CGRect)rectForSelectedItemAtIndex:(NSUInteger)index;
