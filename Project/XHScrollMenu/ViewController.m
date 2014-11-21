@@ -74,7 +74,7 @@
     
     [self.view addSubview:self.scrollView];
     
-    for (int i = 0; i < 10; i ++) {
+    for (int i = 0; i < 5; i ++) {
         XHMenu *menu = [[XHMenu alloc] init];
         
         NSString *title = nil;
@@ -83,7 +83,7 @@
                 title = @"头条";
                 break;
             case 1:
-                title = @"热点新闻";
+                title = @"热闻asdfasd";
                 break;
             case 2:
                 title = @"原创";
@@ -125,6 +125,7 @@
     [self startObservingContentOffsetForScrollView:_scrollView];
     
     _scrollMenu.menus = self.menus;
+    _scrollMenu.shouldUniformizeMenus = YES;
     [_scrollMenu reloadData];
 }
 

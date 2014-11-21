@@ -199,6 +199,22 @@
     if (self.menuButtons.count)
         [self.menuButtons removeAllObjects];
     
+    CGFloat totalWidth = 10;
+    CGFloat totalButtonWidth = 0;
+    for (XHMenu *menu in self.menus) {
+        NSUInteger index = [self.menus indexOfObject:menu];
+        UIButton *menuButton = [self getButtonWithMenu:menu];
+        menuButton.tag = kXHMenuButtonBaseTag + index;
+        CGRect menuButtonFrame = menuButton.frame;
+        if (index) {
+            totalWidth += kXHMenuButtonPaddingX + menuButtonFrame.size.width;
+        } else {
+            totalWidth = kXHMenuButtonStarX;
+        }
+        NSLog(@"totalButtonWidth is %f \n totalWidth is %f",totalButtonWidth,totalWidth);
+        totalButtonWidth += menuButtonFrame.size.width;
+    }
+    
     // layout subViews
     CGFloat contentWidth = 10;
     for (XHMenu *menu in self.menus) {
@@ -207,10 +223,20 @@
         menuButton.tag = kXHMenuButtonBaseTag + index;
         CGRect menuButtonFrame = menuButton.frame;
         CGFloat buttonX = 0;
-        if (index) {
-            buttonX = kXHMenuButtonPaddingX + CGRectGetMaxX(((UIButton *)(self.menuButtons[index - 1])).frame);
-        } else {
-            buttonX = kXHMenuButtonStarX;
+        if (self.shouldUniformizeMenus && totalWidth < CGRectGetWidth(self.scrollView.bounds)) {
+            CGFloat newPadding = (CGRectGetWidth(self.scrollView.bounds) - totalButtonWidth) / (self.menus.count + 1);
+            if (index) {
+                buttonX = newPadding + CGRectGetMaxX(((UIButton *)(self.menuButtons[index - 1])).frame);
+            } else {
+                buttonX = newPadding;
+            }
+        }
+        else {
+            if (index) {
+                buttonX = kXHMenuButtonPaddingX + CGRectGetMaxX(((UIButton *)(self.menuButtons[index - 1])).frame);
+            } else {
+                buttonX = kXHMenuButtonStarX;
+            }
         }
         
         menuButtonFrame.origin = CGPointMake(buttonX, CGRectGetMidY(self.bounds) - (CGRectGetHeight(menuButtonFrame) / 2.0));
@@ -231,6 +257,7 @@
         }
     }
     [self.scrollView setContentSize:CGSizeMake(contentWidth, CGRectGetHeight(self.scrollView.frame))];
+    
     [self setSelectedIndex:self.selectedIndex animated:NO calledDelegate:YES];
 }
 
