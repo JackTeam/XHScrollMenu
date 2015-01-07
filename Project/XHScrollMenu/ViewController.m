@@ -61,7 +61,8 @@
     _scrollMenu = [[XHScrollMenu alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_segmentedControl.frame), CGRectGetWidth(self.view.bounds), 36)];
     _scrollMenu.backgroundColor = [UIColor colorWithWhite:0.902 alpha:1.000];
     _scrollMenu.indicatorTintColor = [UIColor greenColor];
-//    _scrollMenu.hasShadowForBoth = NO;
+    _scrollMenu.hasShadowForBoth = NO;
+    _scrollMenu.shouldUniformizeMenus = YES;
     _scrollMenu.delegate = self;
     //    _scrollMenu.selectedIndex = 3;
     [self.view addSubview:self.scrollMenu];
@@ -74,7 +75,7 @@
     
     [self.view addSubview:self.scrollView];
     
-    for (int i = 0; i < 5; i ++) {
+    for (int i = 0; i < 14; i ++) {
         XHMenu *menu = [[XHMenu alloc] init];
         
         NSString *title = nil;
@@ -83,7 +84,7 @@
                 title = @"头条";
                 break;
             case 1:
-                title = @"热闻asdfasd";
+                title = @"热门";
                 break;
             case 2:
                 title = @"原创";

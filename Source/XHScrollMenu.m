@@ -104,6 +104,7 @@
     }
     
     _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake((self.hasShadowForBoth ? CGRectGetMaxX(_leftShadowView.frame) : 0), 0, CGRectGetWidth(self.bounds) - (self.hasShadowForBoth ? CGRectGetWidth(rightShadowViewFrame) * 2 : 0) - (self.hasManagerButton ? CGRectGetWidth(_managerMenusButton.frame) : 0), CGRectGetHeight(self.bounds))];
+    [_scrollView setScrollsToTop:NO];
     _scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _scrollView.showsVerticalScrollIndicator = NO;
     _scrollView.showsHorizontalScrollIndicator = NO;
@@ -111,7 +112,9 @@
     
     _indicatorView = [XHIndicatorView initIndicatorView];
     _indicatorView.alpha = 0.;
-    _indicatorView.backgroundColor = self.indicatorTintColor;
+    if (self.indicatorTintColor) {
+        _indicatorView.backgroundColor = self.indicatorTintColor;
+    }
     [_scrollView addSubview:self.indicatorView];
     
     [self addSubview:self.scrollView];
@@ -132,7 +135,7 @@
 
 - (UIButton *)getButtonWithMenu:(XHMenu *)menu {
     CGSize buttonSize = [menu.title sizeWithFont:menu.titleFont constrainedToSize:CGSizeMake(MAXFLOAT, CGRectGetHeight(self.bounds) - 10) lineBreakMode:NSLineBreakByCharWrapping];
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, buttonSize.width, buttonSize.height)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, buttonSize.width, CGRectGetHeight(self.bounds))];
     button.titleLabel.textAlignment = UITextAlignmentCenter;
     button.titleLabel.font = menu.titleFont;
     [button setTitle:menu.title forState:UIControlStateNormal];
@@ -190,7 +193,7 @@
     }];
 }
 
-- (void)reloadData {
+- (void)removeAllButtonSubviews {
     [self.scrollView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if ([obj isKindOfClass:[UIButton class]]) {
             [((UIButton *)obj) removeFromSuperview];
@@ -198,7 +201,15 @@
     }];
     if (self.menuButtons.count)
         [self.menuButtons removeAllObjects];
+}
+
+- (void)reloadData {
+    [self removeAllButtonSubviews];
     
+    // 为了得到ScrollView的contentSize的宽
+    CGFloat contentSizeWidht = 10;
+    
+    // 校验总文字长度
     CGFloat totalWidth = 10;
     CGFloat totalButtonWidth = 0;
     for (XHMenu *menu in self.menus) {
@@ -211,44 +222,51 @@
         } else {
             totalWidth = kXHMenuButtonStarX;
         }
-        NSLog(@"totalButtonWidth is %f \n totalWidth is %f",totalButtonWidth,totalWidth);
         totalButtonWidth += menuButtonFrame.size.width;
     }
     
-    // layout subViews
-    CGFloat contentWidth = 10;
+    // 重新布局UI
     for (XHMenu *menu in self.menus) {
         NSUInteger index = [self.menus indexOfObject:menu];
         UIButton *menuButton = [self getButtonWithMenu:menu];
         menuButton.tag = kXHMenuButtonBaseTag + index;
         CGRect menuButtonFrame = menuButton.frame;
         CGFloat buttonX = 0;
+        
+        // 判断总长度是否为均匀分布
         if (self.shouldUniformizeMenus && totalWidth < CGRectGetWidth(self.scrollView.bounds)) {
+            
             CGFloat newPadding = (CGRectGetWidth(self.scrollView.bounds) - totalButtonWidth) / (self.menus.count + 1);
             if (index) {
                 buttonX = newPadding + CGRectGetMaxX(((UIButton *)(self.menuButtons[index - 1])).frame);
             } else {
                 buttonX = newPadding;
             }
-        }
-        else {
+            
+        } else {
+            
             if (index) {
                 buttonX = kXHMenuButtonPaddingX + CGRectGetMaxX(((UIButton *)(self.menuButtons[index - 1])).frame);
             } else {
                 buttonX = kXHMenuButtonStarX;
             }
+            
         }
         
+        // 配置Item的布局
         menuButtonFrame.origin = CGPointMake(buttonX, CGRectGetMidY(self.bounds) - (CGRectGetHeight(menuButtonFrame) / 2.0));
         menuButton.frame = menuButtonFrame;
         [self.scrollView addSubview:menuButton];
+        
+        // 添加到数据源
         [self.menuButtons addObject:menuButton];
         
-        // scrollView content size width
+        // 为了得到ScrollView的contentSize的宽
         if (index == self.menus.count - 1) {
-            contentWidth += CGRectGetMaxX(menuButtonFrame);
+            contentSizeWidht += CGRectGetMaxX(menuButtonFrame);
         }
         
+        // 为了具有默认选中某个Item的功能
         if (self.selectedIndex == index) {
             menuButton.selected = YES;
             // indicator
@@ -256,7 +274,7 @@
             [self setupIndicatorFrame:menuButtonFrame animated:NO callDelegate:NO];
         }
     }
-    [self.scrollView setContentSize:CGSizeMake(contentWidth, CGRectGetHeight(self.scrollView.frame))];
+    [self.scrollView setContentSize:CGSizeMake(contentSizeWidht, CGRectGetHeight(self.scrollView.frame))];
     
     [self setSelectedIndex:self.selectedIndex animated:NO calledDelegate:YES];
 }
